@@ -9,7 +9,7 @@ $(document).ready(function() {
   var date = new Date(new Date().toISOString());
   var Milliseconds = date.getTime() - cats.getTime();
   var Seconds = Milliseconds / 1000;
-  var begin = 60 - Seconds;
+  var begin = 120 - Seconds;
   var fff = Math.ceil(begin);
 
     time = fff;

@@ -77,7 +77,7 @@ gem 'redis-store'
 gem 'jquery-rails', '~> 4.3', '>= 4.3.1'
 
 # Ahoy
-gem 'ahoy_matey'
+gem 'ahoy_matey', '1.6.0'
 
 gem "sidekiq-cron"
 

@@ -1,5 +1,5 @@
-schedule_example_job:  
-  cron: "*/1 * * * *"
+schedule_example_job:
+  cron: "*/2 * * * *"
   class: "VideoJob"
   queue: default
   active_job: true

@@ -31,10 +31,10 @@ document.addEventListener('turbolinks:load', function() {
 	    success: function(data){
 	    	// console.log("ran");
 	    	// debugger
-				$('#current-viewers').text(data.data[4])
+				$('#current-viewers').text(data.visitor_data)
 				$('#current-keeps').remove()
 				$('.btn-keep-wrapper').append("\
-					<input type='hidden' id='current-keeps' name='vid_id' type='hidden' value='"+ data.data[5] +"'>")
+					<input type='hidden' id='current-keeps' name='vid_id' type='hidden' value='"+ data.ahoy_data +"'>")
 					var totalKeeps = parseInt($('#current-keeps').val())
 					var totalVisits = parseInt($('#current-viewers').html())
 					var val = (Math.round((totalKeeps / totalVisits) * 100 ))  + '%';
@@ -42,20 +42,18 @@ document.addEventListener('turbolinks:load', function() {
 					$('.progress-bar span').text(val)
 
 
-	    	if (old_id[0].value != data.data[0]) {
-	    	   console.log("success");
-	    	   		 // var a = false;
-					 time = 60;
+	    	if (old_id[0].value != data.video_data.vid_id) {
+					 time = 120;
 				 	 timer['timerFunction'];
 
 	    	   $('.video').remove()
 	    	   $('.video_id').remove()
 	    	   $('.stream-container').append("\
-	    	   	<input class='video_id' name='vid_id' type='hidden' value="+ data.data[0] +">\
-	    	   <iframe class='video' id= "+ data.data[0] +" width='700' \
-	    	   height='500' src='https://www.youtube.com/embed/"+ data.data[0] +"?autoplay=1&start="+ data.data[1]+"'></iframe> ")
-					 $("#vid-title").text(data.data[6].vid_title)
-					 $("#vid-username").text(data.data[6].channel_title)
+	    	   	<input class='video_id' name='vid_id' type='hidden' value="+ data.video_data.vid_id +">\
+	    	   <iframe class='video' id= "+ data.video_data.vid_id +" width='700' \
+	    	   height='500' src='https://www.youtube.com/embed/"+ data.video_data.vid_id +"?autoplay=1&start="+ data.video_data.vid_duration+"'></iframe> ")
+					 $("#vid-title").text(data.video_data.vid_title)
+					 $("#vid-username").text(data.video_data.channel_title)
 					 $("#btn-keep").removeClass("disabled");
 					 $(".coin").css("animation-duration","3s");
 					 $(".coin").fadeIn( 1000, function() {
@@ -74,7 +72,7 @@ document.addEventListener('turbolinks:load', function() {
 					$('.progress').css("box-shadow","-4px -4px 0px 0px #9d1813");
 				}
 
-	    	if (data.data[7] == 'prev' && time == 0 ) {
+	    	if (data.video_data.video_type == 'prev' && time == 0 ) {
 	    		clearInterval(timer);
 	    		console.log('timer');
 	    		document.getElementById("timer").innerHTML =  "<p>Video Kept</p>";
@@ -107,7 +105,7 @@ document.addEventListener("turbolinks:load", function() {
 				success: function(data){
 					$('#current-keeps').remove()
 					$('.btn-keep-wrapper').append("\
-					<input type='hidden' id='current-keeps' name='vid_id' type='hidden' value='"+ data.data +"'>")
+					<input type='hidden' id='current-keeps' name='vid_id' type='hidden' value='"+ data.ahoy_data +"'>")
 					var totalKeeps = parseInt($('#current-keeps').val())
 					var totalVisits = parseInt($('#current-viewers').html())
 					var val = (Math.round((totalKeeps / totalVisits) * 100 ))  + '%';

@@ -19,7 +19,7 @@
     <div class='col-3'>
       <div class='row justify-content-center'>
         <div class='col-12 mb-4' data-intro="If you like the streamr, subscribe to their channel!" data-position="left"><!-- Subscribe button -->
-        <%= link_to(subscribe_path(@params[3]), class: "btn-subscribe", remote: true) do %>
+        <%= link_to(subscribe_path(@video.channel_id), class: "btn-subscribe", remote: true) do %>
           <i class='fa fa-fw fa-plus'></i>Subscribe
         <% end %>
         </div><!-- Subscribe button end -->
@@ -37,8 +37,8 @@
 
     <div class="col-9">
       <div class="stream-container"><!-- Videostream container -->
-        <input class="video_id" name="vid_id" type="hidden" value=<%= @params[0] %>>
-        <iframe class='video' id=<%= @params[0] %> width='700' height='500' src='https://www.youtube.com/embed/<%= @params[0] %>?autoplay=1&start=<%= @params[1] %>' allowfullscreen></iframe>
+        <input class="video_id" name="vid_id" type="hidden" value=<%= @video.vid_id %>>
+        <iframe class='video' id=<%= @video.vid_id %> width='700' height='500' src='https://www.youtube.com/embed/<%= @video.vid_id %>?autoplay=1&start=<%= @video.vid_duration %>' allowfullscreen></iframe>
       </div><!-- Videostream container end -->
     </div>
 

@@ -2,37 +2,37 @@ class VideoJob < ApplicationJob
   queue_as :default
 
   def perform
-    visitor = Visit.all.count 
+    visitor = Visit.all.count
 
-    if visitor != 0 
-    likes = Ahoy::Event.all.count 
+    if visitor != 0
+    likes = Ahoy::Event.all.count
     more_than = (likes/visitor.to_f)*100
 
-      if more_than >= 50 
+      if more_than >= 50
         if Video.last.video_type != 'prev'
           VideoJob.disable!
           Video.last.update(video_type: 'prev')
-        else 
+        else
           CleanVisitsEventsJob.perform_now
-          play_random_video
-        end 
-      else 
+          VideoJob.play_random_video
+        end
+      else
         has_available_stream = false
         if Stream.count > 0
           play_stream(has_available_stream)
         else
-         play_random_video
+         VideoJob.play_random_video
         end
-      end 
-    else 
+      end
+    else
       if Stream.count > 0
         play_stream(has_available_stream)
       else
-       play_random_video
+       VideoJob.play_random_video
       end
-    end 
-  end 
-  
+    end
+  end
+
     def play_stream(has_available_stream)
       while !has_available_stream && Stream.count > 0
         stream = Stream.last
@@ -50,47 +50,30 @@ class VideoJob < ApplicationJob
           channel_id: stream.channel_id, channel_title: stream.channel_title, vid_duration: 0)
         stream.destroy
       end
-    end 
-
-    def video(vid)
-      @details = []
-      @details << vid.id
-      @details << vid.duration/2
-      @details << vid.title
-      @details << vid.channel_title
-      @details << vid.channel_id
-      Video.last.update(vid_id: @details[0] , vid_duration: @details[1],
-          vid_title: @details[2], channel_title: @details[3],
-          channel_id: @details[4], video_type: 'nil')
     end
 
-    def play_random_video
+    def self.play_random_video
         live = rand(0..1)
         videos = Yt::Collections::Videos.new
-
-        if live == 1 
+        if live == 1
          luck = rand(0..1)
-            if luck == 1 
-              vid = videos.where(order: 'viewCount', q: 'fun streaming dota', videoEmbeddable: true, videoDuration: 'long')
-              num = 50 
-            else 
-              vid = videos.where(order: 'viewCount', q: 'fun streaming dota', videoEmbeddable: true, videoDuration: 'medium')
-              num = 30 
-            end 
-         max = vid.count
-         count = rand(1..max)
-         @live = vid.take(count).last 
-         video(@live)
+         luck == 1 ? duration = 'long' : duration = 'medium'
+         vid = videos.where(order: 'viewCount', q: 'fun streaming dota', videoEmbeddable: true, videoDuration: duration)
         else
           vid = videos.where(order: 'viewCount', q: 'dota 2 stream', event_type: 'live', videoEmbeddable: true)
-          max = vid.count
-          count = rand(1..max)
-          @live = vid.take(count).last
-          video(@live)
         end
+
+      count = rand(1..vid.count)
+      @live = vid.take(count).last
+      @video = VideoJob.video(@live)
       CleanVisitsEventsJob.perform_now
-    end 
-    
+    end
+
+    def self.video(vid)
+      Video.last.update(vid_id: vid.id , vid_duration: vid.duration/2,
+          vid_title: vid.title, channel_title: vid.channel_title,
+          channel_id: vid.channel_id, video_type: 'nil')
+    end
 
     def self.disable!
       # set a flag in Redis, it will expire after 10 minutes

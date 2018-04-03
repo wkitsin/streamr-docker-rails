@@ -24,12 +24,6 @@ ActiveRecord::Schema.define(version: 20171007051637) do
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
   end
 
-  create_table "counters", force: :cascade do |t|
-    t.integer "current_index", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "messages", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
